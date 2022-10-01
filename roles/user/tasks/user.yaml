@@ -1,0 +1,17 @@
+---
+- name: Setup git for user (ansible_user)
+  include_role:
+    name: tool_git
+
+- name: Setup vim for user (ansible_user)
+  include_role:
+    name: tool_vim
+ 
+- name: Setup zsh for user (ansible_user)
+  include_role:
+    name: tool_zsh
+ 
+- name: Setup docker for user (ansible_user)
+  include_role:
+    name: tool_docker
+ 

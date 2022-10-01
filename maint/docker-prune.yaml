@@ -1,0 +1,15 @@
+---
+- hosts: all
+  become: true
+  become_user: root
+  tasks:
+
+  - name: Prune docker (including volumes)
+    ansible.builtin.shell:
+      cmd: docker system prune --all --volumes --force
+    register: prune
+
+  - name: Show Output
+    debug:
+      msg: "{{ prune.stdout_lines }}"
+

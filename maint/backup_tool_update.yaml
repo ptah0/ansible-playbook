@@ -1,0 +1,21 @@
+---
+- hosts: all
+  become: true
+  become_user: root
+  tasks:
+  - name: rclone self update
+    ansible.builtin.shell: rclone selfupdate
+    register: rclone
+
+  - name: Show Output
+    ansible.builtin.debug:
+      msg: "{{ rclone.stdout_lines + rclone.stderr_lines }}"
+
+  - name: restic self update
+    ansible.builtin.shell: restic self-update
+    register: restic
+
+  - name: Show Output
+    ansible.builtin.debug:
+      msg: "{{ restic.stdout_lines }}"
+

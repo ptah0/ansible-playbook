@@ -1,0 +1,10 @@
+---
+- name: Install necessary packages
+  become: true
+  become_user: root
+  ansible.builtin.apt:
+    name:
+      - python3
+      - python3-virtualenv
+      - python-is-python3
+      - pipx

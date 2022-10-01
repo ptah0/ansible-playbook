@@ -1,0 +1,7 @@
+---
+- name: initialize all nodes
+  hosts: all
+  roles:
+    - system
+    - user
+    - packages

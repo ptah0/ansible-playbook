@@ -1,0 +1,12 @@
+---
+- name: setup user's sudo permission
+  include_tasks:
+    file: sudo.yaml
+    apply:
+      become: true
+      become_user: root
+  when: ansible_user != "root"
+
+- name: setup user (ansible_user)
+  include_tasks:
+    file: user.yaml

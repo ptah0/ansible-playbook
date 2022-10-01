@@ -1,0 +1,14 @@
+---
+- name: Config system params
+  include_tasks:
+    file: system.yaml
+    apply:
+      become: true
+      become_user: root
+
+- name: Config root user
+  include_tasks:
+    file: root.yaml
+    apply:
+      become: true
+      become_user: root

@@ -1,0 +1,18 @@
+---
+- name: Copy skeleton for root user
+  ansible.builtin.copy:
+    src: "/etc/skel/{{ item }}"
+    dest: "/root/{{ item }}"
+  loop:
+    - .profile
+    - .bashrc
+    - .bash_logout
+  register: result
+
+- name: Setup git
+  include_role:
+    name: tool_git
+
+- name: Setup vim
+  include_role:
+    name: tool_vim

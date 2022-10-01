@@ -1,0 +1,29 @@
+---
+- name: Install minimum packages
+  ansible.builtin.apt:
+    name:
+      - vim
+      - git
+      - zstd
+    update_cache: yes
+    state: present
+
+- name: Install ntp
+  ansible.builtin.apt:
+    name:
+      - chrony
+    state: present
+
+- name: Purge systemd-timesyncd
+  ansible.builtin.apt:
+    name:
+      - systemd-timesyncd
+    purge: yes
+    state: absent
+
+- name: Mute system bell
+  ansible.builtin.lineinfile:
+    path: /etc/inputrc
+    search_string: "# set bell-style none"
+    line: "set bell-style none"
+    state: present

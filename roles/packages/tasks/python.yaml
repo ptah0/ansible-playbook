@@ -1,0 +1,8 @@
+---
+- name: Install useful python packages via pipx
+  community.general.pipx:
+    name: "{{ item  }}"
+    state: latest
+  loop:
+    - tldr #man
+    - httpie #curl

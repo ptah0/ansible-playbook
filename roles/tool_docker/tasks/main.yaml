@@ -1,0 +1,14 @@
+---
+- name: Set alias for docker compose
+  ansible.builtin.blockinfile:
+    path: "{{ item  }}"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK - docker compose"
+    block: |
+      alias dcp='docker compose pull'
+      alias dcr='docker compose down && docker compose up -d && docker compose logs -f'
+      alias dcpr='dcp && dcr'
+    create: yes
+    state: present
+  loop:
+    - $HOME/.bash_aliases
+    - $HOME/.oh-my-zsh/custom/alias_docker_compose.zsh

@@ -1,0 +1,22 @@
+---
+- name: Install Vimrc
+  become: true
+  become_user: root
+  ansible.builtin.git:
+    repo: https://github.com/amix/vimrc.git
+    dest: /usr/local/src/vim_runtime
+    depth: 1
+
+- name: Update Vimrc config
+  become: true
+  become_user: root
+  ansible.builtin.blockinfile:
+    path: /usr/local/src/vim_runtime/my_configs.vim
+    marker: '" {mark} ANSIBLE MANAGED BLOCK'
+    block: |
+      set foldcolumn=0
+      let g:dracula_colorterm=0
+      colorscheme dracula
+    insertbefore: BOF
+    create: yes
+    state: present

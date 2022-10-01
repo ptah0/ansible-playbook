@@ -1,0 +1,7 @@
+---
+- name: set git pull rebase by default
+  community.general.git_config:
+    scope: global
+    name: pull.rebase
+    value: "true"
+  register: result

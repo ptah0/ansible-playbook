@@ -1,0 +1,77 @@
+---
+- name: Install useful packages
+  become: true
+  become_user: root
+  ansible.builtin.apt:
+    name:
+      - htop #top
+      - ncdu #du
+      - duf #df
+      - exa #ls
+      - tre-command #tree
+      - ripgrep #grep
+      - fd-find #find
+      - bat #cat
+      - fzf #find
+      - jq #json format
+
+- name: Set alias for exa
+  ansible.builtin.blockinfile:
+    path: "{{ item  }}"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK - exa"
+    block: |
+      alias ll='exa -l'
+      alias la='exa -la'
+    create: yes
+    state: present
+  loop:
+    - $HOME/.bash_aliases
+    - $HOME/.oh-my-zsh/custom/alias_exa.zsh
+
+- name: Set alias for fd-find
+  ansible.builtin.blockinfile:
+    path: "{{ item  }}"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK - fd-find"
+    block: |
+      alias fd='fdfind'
+    create: yes
+    state: present
+  loop:
+    - $HOME/.bash_aliases
+    - $HOME/.oh-my-zsh/custom/alias_fd-find.zsh
+
+- name: Set alias for bat
+  ansible.builtin.blockinfile:
+    path: "{{ item  }}"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK - bat"
+    block: |
+      alias bat='batcat'
+    create: yes
+    state: present
+  loop:
+    - $HOME/.bash_aliases
+    - $HOME/.oh-my-zsh/custom/alias_bat.zsh
+
+- name: Setup config dir for bat
+  ansible.builtin.file:
+    path: $HOME/.config/bat/
+    state: directory
+
+- name: Config theme for bat
+  ansible.builtin.copy:
+    dest: $HOME/.config/bat/config
+    content: |
+      # Set the theme to "Dracula"
+      --theme="Dracula"
+
+- name: insert an empty line before the marker line
+  replace:
+    path: $HOME/.bash_aliases
+    regexp: '(?<=.\n)^(# BEGIN ANSIBLE MANAGED BLOCK.*)$'
+    replace: '\n\1'
+
+- name: insert an empty line after the marker line
+  replace:
+    path: $HOME/.bash_aliases
+    regexp: '^(# END ANSIBLE MANAGED BLOCK.*)$(?=\n.)'
+    replace: '\1\n'

@@ -1,0 +1,27 @@
+---
+- name: Check if user exist
+  check_mode: yes
+  ansible.builtin.user:
+    name: "{{ ansible_user }}"
+    state: present
+  register: user
+  failed_when: user.state != "present"
+
+- name: Check if cloud init (90-cloud-init-users) exists
+  ansible.builtin.stat:
+    path: /etc/sudoers.d/90-cloud-init-users
+  register: cloudinit
+
+- name: Set sudo no-password for user
+  ansible.builtin.lineinfile:
+    path: /etc/sudoers.d/10-nopasswd
+    regexp: "^{{ ansible_user }}.+NOPASSWD.+"
+    line: "{{ ansible_user }}    ALL=(ALL:ALL) NOPASSWD:ALL"
+    create: true
+    state: present
+  when: cloudinit.stat.exists == false
+
+- name: Remove deprecated sudoers.d file for Raspberry Pi
+  ansible.builtin.file:
+    path: /etc/sudoers.d/010_pi-nopasswd
+    state: absent
