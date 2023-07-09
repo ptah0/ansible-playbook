@@ -16,15 +16,15 @@
 
 - name: Set var USER, ZSH_BIN
   ansible.builtin.set_fact:
-    USER: "{{ ansible_user }}"
-    ZSH_BIN: "{{ zsh.stdout }}"
+    shell_user: "{{ ansible_user }}"
+    shell_zsh_bin: "{{ zsh.stdout }}"
 
 - name: Change default shell to zsh
   become: true
   become_user: root
   ansible.builtin.user:
-    name: "{{ USER }}"
-    shell: "{{ ZSH_BIN }}"
+    name: "{{ shell_user }}"
+    shell: "{{ shell_zsh_bin }}"
 
 - name: Update .zprofile
   ansible.builtin.blockinfile:
@@ -35,7 +35,8 @@
           emulate zsh -c 'source $HOME/.profile'
       fi
     insertbefore: BOF
-    create: yes
+    create: true
+    mode: "644"
     state: present
 
 - name: Get stats of .zshrc
@@ -43,28 +44,29 @@
     path: $HOME/.zshrc
   register: zshrc
 
-- name: Download zsh-installer
-  ansible.builtin.get_url:
-    url: https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh
-    dest: /tmp/zsh-installer.sh
-  when: zshrc.stat.exists == false
+- name: Set default shell to zsh
+  when: not zshrc.stat.exists
+  block:
+    - name: Download zsh-installer
+      ansible.builtin.get_url:
+        url: https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh
+        dest: /tmp/zsh-installer.sh
+        mode: "644"
 
-- name: Add Permission to zsh-installer.sh
-  ansible.builtin.file:
-    path: /tmp/zsh-installer.sh
-    mode: u+x
-  when: zshrc.stat.exists == false
+    - name: Add Permission to zsh-installer.sh
+      ansible.builtin.file:
+        path: /tmp/zsh-installer.sh
+        mode: u+x
 
-- name: Remove .oh-my-zsh in order to run the zsh-installer.sh
-  ansible.builtin.file:
-    path: $HOME/.oh-my-zsh
-    state: absent
-  when: zshrc.stat.exists == false
+    - name: Remove .oh-my-zsh in order to run the zsh-installer.sh
+      ansible.builtin.file:
+        path: $HOME/.oh-my-zsh
+        state: absent
 
-- name: Execute the zsh-installer.sh
-  ansible.builtin.shell:
-    cmd: "/tmp/zsh-installer.sh --unattended"
-  when: zshrc.stat.exists == false
+    - name: Execute the zsh-installer.sh
+      ansible.builtin.command:
+        cmd: /tmp/zsh-installer.sh --unattended
+      changed_when: true
 
 - name: Config Zsh - Disable AUTO_TITLE
   ansible.builtin.replace:
@@ -96,7 +98,8 @@
     search_string: ZSH_THEME="dracula"
     insertafter: "^#ZSH_THEME.*"
     line: ZSH_THEME="dracula"
-    create: yes
+    create: true
+    mode: "644"
     state: present
 
 - name: Set Dracula theme Options
@@ -105,7 +108,8 @@
     search_string: DRACULA_DISPLAY_CONTEXT=1
     insertafter: "^ZSH_THEME=.*"
     line: DRACULA_DISPLAY_CONTEXT=1
-    create: yes
+    create: true
+    mode: "644"
     state: present
 
 - name: Update .zshrc config
@@ -115,17 +119,18 @@
     block: |
       plugins=($plugins aliases systemd)
     insertbefore: '^source \$ZSH\/oh-my-zsh\.sh'
-    create: yes
+    create: true
+    mode: "644"
     state: present
 
-- name: insert an empty line before the marker line
-  replace:
+- name: Insert an empty line before the marker line
+  ansible.builtin.replace:
     path: $HOME/.zshrc
     regexp: '(?<=.\n)^(# BEGIN ANSIBLE MANAGED BLOCK.*)$'
     replace: '\n\1'
 
-- name: insert an empty line after the marker line
-  replace:
+- name: Insert an empty line after the marker line
+  ansible.builtin.replace:
     path: $HOME/.zshrc
     regexp: '^(# END ANSIBLE MANAGED BLOCK.*)$(?=\n.)'
     replace: '\1\n'

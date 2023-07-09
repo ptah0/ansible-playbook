@@ -1,0 +1,16 @@
+---
+- name: Prune docker disk usage, including volumes
+  hosts: all
+  become: true
+  become_user: root
+  tasks:
+    - name: Prune docker disk usage (including volumes)
+      ansible.builtin.command:
+        cmd: docker system prune --all --volumes --force
+      register: prune
+      changed_when: true
+      failed_when: prune.rc != 0
+
+    - name: Show Output
+      ansible.builtin.debug:
+        msg: "{{ prune.stdout_lines }}"

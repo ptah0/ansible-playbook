@@ -4,25 +4,26 @@
   become_user: root
   ansible.builtin.apt:
     name:
-      - htop #top
-      - ncdu #du
-      - duf #df
-      - exa #ls
-      - tre-command #tree
-      - ripgrep #grep
-      - fd-find #find
-      - bat #cat
-      - fzf #find
-      - jq #json format
+      - htop # top
+      - ncdu # du
+      - duf # df
+      - exa # ls
+      - tre-command # tree
+      - ripgrep # grep
+      - fd-find # find
+      - bat # cat
+      - fzf # find
+      - jq # json format
 
 - name: Set alias for exa
   ansible.builtin.blockinfile:
-    path: "{{ item  }}"
+    path: "{{ item }}"
     marker: "# {mark} ANSIBLE MANAGED BLOCK - exa"
     block: |
       alias ll='exa -l'
       alias la='exa -la'
-    create: yes
+    create: true
+    mode: '644'
     state: present
   loop:
     - $HOME/.bash_aliases
@@ -30,11 +31,12 @@
 
 - name: Set alias for fd-find
   ansible.builtin.blockinfile:
-    path: "{{ item  }}"
+    path: "{{ item }}"
     marker: "# {mark} ANSIBLE MANAGED BLOCK - fd-find"
     block: |
       alias fd='fdfind'
-    create: yes
+    create: true
+    mode: '644'
     state: present
   loop:
     - $HOME/.bash_aliases
@@ -42,11 +44,12 @@
 
 - name: Set alias for bat
   ansible.builtin.blockinfile:
-    path: "{{ item  }}"
+    path: "{{ item }}"
     marker: "# {mark} ANSIBLE MANAGED BLOCK - bat"
     block: |
       alias bat='batcat'
-    create: yes
+    create: true
+    mode: '644'
     state: present
   loop:
     - $HOME/.bash_aliases
@@ -56,6 +59,7 @@
   ansible.builtin.file:
     path: $HOME/.config/bat/
     state: directory
+    mode: '755'
 
 - name: Config theme for bat
   ansible.builtin.copy:
@@ -63,15 +67,16 @@
     content: |
       # Set the theme to "Dracula"
       --theme="Dracula"
+    mode: '644'
 
-- name: insert an empty line before the marker line
-  replace:
+- name: Insert an empty line before the marker line
+  ansible.builtin.replace:
     path: $HOME/.bash_aliases
     regexp: '(?<=.\n)^(# BEGIN ANSIBLE MANAGED BLOCK.*)$'
     replace: '\n\1'
 
-- name: insert an empty line after the marker line
-  replace:
+- name: Insert an empty line after the marker line
+  ansible.builtin.replace:
     path: $HOME/.bash_aliases
     regexp: '^(# END ANSIBLE MANAGED BLOCK.*)$(?=\n.)'
     replace: '\1\n'

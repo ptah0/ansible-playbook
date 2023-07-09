@@ -1,0 +1,10 @@
+profile: production
+
+exclude_paths:
+  - .git
+  - .github
+  - .venv
+  - .vscode
+
+skip_list:
+  - latest[git]

@@ -3,6 +3,7 @@
   ansible.builtin.copy:
     src: "/etc/skel/{{ item }}"
     dest: "/root/{{ item }}"
+    mode: '600'
   loop:
     - .profile
     - .bashrc
@@ -10,9 +11,9 @@
   register: result
 
 - name: Setup git
-  include_role:
+  ansible.builtin.include_role:
     name: tool_git
 
 - name: Setup vim
-  include_role:
+  ansible.builtin.include_role:
     name: tool_vim

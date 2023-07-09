@@ -5,7 +5,7 @@
       - vim
       - git
       - zstd
-    update_cache: yes
+    update_cache: true
     state: present
 
 - name: Install ntp
@@ -18,7 +18,7 @@
   ansible.builtin.apt:
     name:
       - systemd-timesyncd
-    purge: yes
+    purge: true
     state: absent
 
 - name: Mute system bell

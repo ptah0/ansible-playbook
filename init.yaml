@@ -1,5 +1,5 @@
 ---
-- name: initialize all nodes
+- name: Initialize all nodes
   hosts: all
   roles:
     - system

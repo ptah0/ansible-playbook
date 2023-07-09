@@ -5,6 +5,7 @@
   register: vimrc
 
 - name: Install vimrc via vim_runtime
+  when: not vimrc.stat.exists
   ansible.builtin.shell:
     cmd: "/usr/local/src/vim_runtime/install_awesome_parameterized.sh /usr/local/src/vim_runtime $USER"
-  when: vimrc.stat.exists == false
+  changed_when: true

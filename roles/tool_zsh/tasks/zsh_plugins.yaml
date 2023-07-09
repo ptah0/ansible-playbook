@@ -5,34 +5,35 @@
   changed_when: false
   register: dpkg
 
-- name: Set CHROMA_VERSION
+- name: Set Chroma version
   ansible.builtin.set_fact:
-    CHROMA_VERSION: 2.7.0
-    DPKG_ARCH: "{{ dpkg.stdout }}"
+    chroma_version: 2.7.0
+    dpkg_arch: "{{ dpkg.stdout }}"
 
-- name: Download CHROMA
+- name: Download Chroma
   ansible.builtin.get_url:
-    url: "https://github.com/alecthomas/chroma/releases/download/v{{CHROMA_VERSION}}/chroma-{{CHROMA_VERSION}}-linux-{{DPKG_ARCH}}.tar.gz"
+    url: "https://github.com/alecthomas/chroma/releases/download/v{{ chroma_version }}/chroma-{{ chroma_version }}-linux-{{ dpkg_arch }}.tar.gz"
     dest: /tmp/chroma.tar.gz
+    mode: "644"
 
-- name: Unzip CHROMA
+- name: Unzip Chroma
   ansible.builtin.unarchive:
-    remote_src: yes
+    remote_src: true
     src: /tmp/chroma.tar.gz
     dest: /tmp/
 
-- name: Copy CHROMA to /usr/local/bin
+- name: Copy Chroma to /usr/local/bin
   become: true
   become_user: root
   ansible.builtin.copy:
-    remote_src: yes
+    remote_src: true
     src: /tmp/chroma
     dest: /usr/local/bin/chroma
     owner: root
     group: root
     mode: "0755"
 
-- name: Update .zshrc config for CHROMA
+- name: Update .zshrc config for Chroma
   ansible.builtin.blockinfile:
     path: $HOME/.zshrc
     marker: "# {mark} ANSIBLE MANAGED BLOCK - Chroma"
@@ -42,17 +43,18 @@
       ZSH_COLORIZE_STYLE="dracula"
       ZSH_COLORIZE_CHROMA_FORMATTER=terminal256
     insertbefore: '^source \$ZSH\/oh-my-zsh\.sh'
-    create: yes
+    create: true
+    mode: "644"
     state: present
 
-- name: insert an empty line before the marker line
-  replace:
+- name: Insert an empty line before the marker line
+  ansible.builtin.replace:
     path: $HOME/.zshrc
     regexp: '(?<=.\n)^(# BEGIN ANSIBLE MANAGED BLOCK.*)$'
     replace: '\n\1'
 
-- name: insert an empty line after the marker line
-  replace:
+- name: Insert an empty line after the marker line
+  ansible.builtin.replace:
     path: $HOME/.zshrc
     regexp: '^(# END ANSIBLE MANAGED BLOCK.*)$(?=\n.)'
     replace: '\1\n'
@@ -70,17 +72,18 @@
     block: |
       fpath+=${ZSH_CUSTOM:-${ZSH:-$HOME/.oh-my-zsh}/custom}/plugins/zsh-completions/src
     insertbefore: '^source \$ZSH\/oh-my-zsh\.sh'
-    create: yes
+    create: true
+    mode: "644"
     state: present
 
-- name: insert an empty line before the marker line
-  replace:
+- name: Insert an empty line before the marker line
+  ansible.builtin.replace:
     path: $HOME/.zshrc
     regexp: '(?<=.\n)^(# BEGIN ANSIBLE MANAGED BLOCK.*)$'
     replace: '\n\1'
 
-- name: insert an empty line after the marker line
-  replace:
+- name: Insert an empty line after the marker line
+  ansible.builtin.replace:
     path: $HOME/.zshrc
     regexp: '^(# END ANSIBLE MANAGED BLOCK.*)$(?=\n.)'
     replace: '\1\n'
@@ -98,17 +101,18 @@
     block: |
       plugins=($plugins autoswitch_virtualenv)
     insertbefore: '^source \$ZSH\/oh-my-zsh\.sh'
-    create: yes
+    create: true
+    mode: "644"
     state: present
 
-- name: insert an empty line before the marker line
-  replace:
+- name: Insert an empty line before the marker line
+  ansible.builtin.replace:
     path: $HOME/.zshrc
     regexp: '(?<=.\n)^(# BEGIN ANSIBLE MANAGED BLOCK.*)$'
     replace: '\n\1'
 
-- name: insert an empty line after the marker line
-  replace:
+- name: Insert an empty line after the marker line
+  ansible.builtin.replace:
     path: $HOME/.zshrc
     regexp: '^(# END ANSIBLE MANAGED BLOCK.*)$(?=\n.)'
     replace: '\1\n'

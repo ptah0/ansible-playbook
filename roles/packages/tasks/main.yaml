@@ -1,18 +1,18 @@
 ---
-- name: install prerequisites
-  include_tasks:
+- name: Install prerequisites
+  ansible.builtin.include_tasks:
     file: prerequisites.yaml
     apply:
       become: true
       become_user: root
 
-- name: install python packages
-  include_tasks:
+- name: Install python packages
+  ansible.builtin.include_tasks:
     file: python.yaml
     apply:
       become: true
       become_user: root
 
-- name: install apt packages
-  include_tasks:
+- name: Install apt packages
+  ansible.builtin.include_tasks:
     file: apt.yaml

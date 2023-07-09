@@ -1,9 +1,0 @@
----
-- hosts: all,!local
-  serial: 1
-  become: true
-  become_user: root
-  tasks:
-  - name: Reboot server
-    ansible.builtin.reboot:
-

@@ -1,8 +1,8 @@
 ---
 - name: Instal and configure vim
-  include_tasks:
+  ansible.builtin.include_tasks:
     file: vim.yaml
 
 - name: Enable vim for user (ansible_become_user)
-  include_tasks:
+  ansible.builtin.include_tasks:
     file: enable.yaml

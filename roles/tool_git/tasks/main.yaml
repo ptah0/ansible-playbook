@@ -1,5 +1,8 @@
 ---
-- name: set git pull rebase by default
+- name: Run as
+  ansible.builtin.debug:
+    var: ansible_user_id
+- name: Set git pull rebase by default
   community.general.git_config:
     scope: global
     name: pull.rebase

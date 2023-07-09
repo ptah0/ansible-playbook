@@ -1,14 +1,14 @@
 ---
 - name: Check if skip_zsh is set
-  debug:
+  ansible.builtin.debug:
     var: skip_zsh
 
 - name: Install zsh if skip_zsh is not true
+  when: skip_zsh is false
   block:
     - name: Install zsh and plugins
-      include_tasks:
+      ansible.builtin.include_tasks:
         file: zsh.yaml
     - name: Install zsh plugins
-      include_tasks:
+      ansible.builtin.include_tasks:
         file: zsh_plugins.yaml
-  when: skip_zsh is false
