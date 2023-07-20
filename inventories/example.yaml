@@ -1,9 +1,15 @@
 all:
   hosts:
   children:
+    # You can bypass ssh for localhost
+    # local:
+      # hosts:
+        # localhost:
+          # ansible_connection: local
     server:
       hosts:
         server.example.com:
   vars:
     ansible_user: example_user # the use you are planning to use, non-root is recomended
     skip_zsh: false # the flag to bypass zsh installation
+
