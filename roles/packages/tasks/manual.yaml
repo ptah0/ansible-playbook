@@ -1,0 +1,36 @@
+---
+- name: Install mcfly
+  block:
+    - name: Set mcfly version
+      ansible.builtin.set_fact:
+        mcfly_version: v0.8.1
+    - name: Download mcfly
+      ansible.builtin.get_url:
+        url: "https://github.com/cantino/mcfly/releases/download/\
+          {{ mcfly_version }}/mcfly-{{ mcfly_version }}-{{ ansible_architecture }}-unknown-linux-musl.tar.gz"
+        dest: /tmp/mcfly.tar.gz
+        mode: "644"
+    - name: Unzip mcfly
+      ansible.builtin.unarchive:
+        remote_src: true
+        src: /tmp/mcfly.tar.gz
+        dest: /tmp/
+    - name: Copy mcfly to /usr/local/bin
+      become: true
+      become_user: root
+      ansible.builtin.copy:
+        remote_src: true
+        src: /tmp/mcfly
+        dest: /usr/local/bin/mcfly
+        owner: root
+        group: root
+        mode: "0755"
+    - name: Create mcfly.zsh
+      ansible.builtin.blockinfile:
+        path: $HOME/.oh-my-zsh/custom/mcfly.zsh
+        marker: "# {mark} ANSIBLE MANAGED BLOCK - Chroma"
+        block: |
+          eval "$(mcfly init zsh)"
+        create: true
+        mode: "644"
+        state: present

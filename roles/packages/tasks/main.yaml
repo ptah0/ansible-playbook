@@ -16,3 +16,7 @@
 - name: Install apt packages
   ansible.builtin.include_tasks:
     file: apt.yaml
+
+- name: Install manual packages
+  ansible.builtin.include_tasks:
+    file: manual.yaml
