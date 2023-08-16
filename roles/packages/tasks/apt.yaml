@@ -8,12 +8,33 @@
       - ncdu # du
       - duf # df
       - exa # ls
-      - tre-command # tree
       - ripgrep # grep
       - fd-find # find
       - bat # cat
       - fzf # find
       - jq # json format
+
+- name: Check Debian 12+
+  ansible.builtin.set_fact:
+    is_debian_12: true
+  when:
+    - ansible_facts['distribution'] == 'Debian'
+    - ansible_facts['distribution_major_version'] | int >= 12
+
+- name: Check Ubuntu 24.04+
+  ansible.builtin.set_fact:
+    is_ubuntu_24: true
+  when:
+    - ansible_facts['distribution'] == 'Ubuntu'
+    - ansible_facts['distribution_major_version'] | int >= 24
+
+- name: Install useful packages (Debian >= 12)
+  become: true
+  become_user: root
+  ansible.builtin.apt:
+    name:
+      - tre-command # tree
+  when: is_debian_12 or is_ubuntu_24
 
 - name: Set alias for exa
   ansible.builtin.blockinfile:
