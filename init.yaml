@@ -2,6 +2,12 @@
 - name: Initialize all nodes
   hosts: all
   roles:
-    - system
-    - user
-    - packages
+    - role: system
+      tags:
+        - system
+    - role: user
+      tags:
+        - user
+    - role: packages
+      tags:
+        - packages
