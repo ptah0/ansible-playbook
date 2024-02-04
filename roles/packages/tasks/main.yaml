@@ -6,12 +6,17 @@
       become: true
       become_user: root
 
-- name: Install python packages
-  ansible.builtin.include_tasks:
-    file: python.yaml
-    apply:
-      become: true
-      become_user: root
+- name: Install python packages via Pipx
+  block:
+    - name: Install for root
+      ansible.builtin.include_tasks:
+        file: python.yaml
+        apply:
+          become: true
+          become_user: root
+    - name: Install for ansible user
+      ansible.builtin.include_tasks:
+        file: python.yaml
 
 - name: Install apt packages
   ansible.builtin.include_tasks:
