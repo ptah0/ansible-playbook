@@ -11,5 +11,5 @@ all:
         server.example.com:
   vars:
     ansible_user: example_user # the use you are planning to use, non-root is recomended
-    skip_zsh: false # the flag to bypass zsh installation
+    # tool_zsh_skip: false # the flag to bypass zsh installation
 

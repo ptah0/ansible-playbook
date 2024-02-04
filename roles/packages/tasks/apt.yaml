@@ -16,14 +16,14 @@
 
 - name: Check Debian 12+
   ansible.builtin.set_fact:
-    is_debian_12: true
+    packages_os_is_debian_12: true
   when:
     - ansible_facts['distribution'] == 'Debian'
     - ansible_facts['distribution_major_version'] | int >= 12
 
 - name: Check Ubuntu 24.04+
   ansible.builtin.set_fact:
-    is_ubuntu_24: true
+    packages_os_is_ubuntu_24: true
   when:
     - ansible_facts['distribution'] == 'Ubuntu'
     - ansible_facts['distribution_major_version'] | int >= 24
@@ -34,7 +34,7 @@
   ansible.builtin.apt:
     name:
       - tre-command # tree
-  when: is_debian_12 or is_ubuntu_24
+  when: packages_os_is_debian_12 or packages_os_is_ubuntu_24
 
 - name: Set alias for exa
   ansible.builtin.blockinfile:
