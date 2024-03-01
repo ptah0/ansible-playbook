@@ -8,7 +8,7 @@
       ansible.builtin.command:
         cmd: rclone selfupdate
       register: rclone
-      changed_when: true
+      changed_when: '"rclone is up to date" not in rclone.stderr'
       failed_when: rclone.rc != 0
 
     - name: Show Output
@@ -18,7 +18,7 @@
     - name: Upgrade restic (self update)
       ansible.builtin.command: restic self-update
       register: restic
-      changed_when: true
+      changed_when: '"restic is up to date" not in restic.stdout'
       failed_when: rclone.rc != 0
 
     - name: Show Output
