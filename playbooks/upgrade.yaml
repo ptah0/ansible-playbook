@@ -19,7 +19,7 @@
       ansible.builtin.shell:
         cmd: |
           set -o pipefail
-          grep -E "^$(date +%Y-%m-%d).+ (install|upgrade) " /var/log/dpkg.log | cut -d " " -f 3-5
+          grep -E "^$(date +%Y-%m-%d).+ (install|upgrade) " /var/log/dpkg.log || echo "N/A" | cut -d " " -f 3-5
         executable: /usr/bin/bash
       register: packages
       changed_when: packages.stdout_lines is undefined
