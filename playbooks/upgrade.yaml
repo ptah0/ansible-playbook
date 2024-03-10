@@ -34,7 +34,6 @@
       register: reboot_required_file
 
     - name: Reboot the box if kernel updated
-      when: reboot_required_file.stat.exists and "local" not in group_names
       ansible.builtin.reboot:
         msg: "Reboot initiated by Ansible for kernel updates"
         connect_timeout: 5
@@ -42,6 +41,8 @@
         pre_reboot_delay: 0
         post_reboot_delay: 30
         test_command: uptime
+      throttle: 1
+      when: reboot_required_file.stat.exists and "local" not in group_names
 
     - name: Cleanup apt packages (autoremove)
       ansible.builtin.apt:
