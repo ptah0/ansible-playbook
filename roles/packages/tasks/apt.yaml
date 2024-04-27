@@ -7,7 +7,6 @@
       - htop # top
       - ncdu # du
       - duf # df
-      - exa # ls
       - ripgrep # grep
       - fd-find # find
       - bat # cat
@@ -28,7 +27,7 @@
     - ansible_facts['distribution'] == 'Ubuntu'
     - ansible_facts['distribution_major_version'] | int >= 24
 
-- name: Install useful packages (Debian >= 12)
+- name: Install useful packages (Debian >= 12, Ubuntu >= 24)
   become: true
   become_user: root
   ansible.builtin.apt:
@@ -36,10 +35,35 @@
       - tre-command # tree
   when: packages_os_is_debian_12 or packages_os_is_ubuntu_24
 
-- name: Set alias for exa
+- name: Install ls alternative exa (Ubuntu < 24)
+  become: true
+  become_user: root
+  ansible.builtin.apt:
+    name:
+      - exa # ls
+  when: not packages_os_is_ubuntu_24
+
+- name: Install ls alternative exa (Ubuntu >= 24)
+  become: true
+  become_user: root
+  ansible.builtin.apt:
+    name:
+      - eza # ls
+  when: packages_os_is_ubuntu_24
+
+- name: Delete Block - Set alias exa
   ansible.builtin.blockinfile:
     path: "{{ item }}"
     marker: "# {mark} ANSIBLE MANAGED BLOCK - exa"
+    state: absent
+  loop:
+    - $HOME/.bash_aliases
+    - $HOME/.oh-my-zsh/custom/alias_exa.zsh
+
+- name: Set alias for ls alternative - exa
+  ansible.builtin.blockinfile:
+    path: "{{ item }}"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK - ls"
     block: |
       alias ll='exa -l'
       alias la='exa -la'
@@ -49,6 +73,22 @@
   loop:
     - $HOME/.bash_aliases
     - $HOME/.oh-my-zsh/custom/alias_exa.zsh
+  when: not packages_os_is_ubuntu_24
+
+- name: Set alias for ls alternative - eza
+  ansible.builtin.blockinfile:
+    path: "{{ item }}"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK - ls"
+    block: |
+      alias ll='eza -l'
+      alias la='eza -la'
+    create: true
+    mode: '644'
+    state: present
+  loop:
+    - $HOME/.bash_aliases
+    - $HOME/.oh-my-zsh/custom/alias_exa.zsh
+  when: packages_os_is_ubuntu_24
 
 - name: Set alias for fd-find
   ansible.builtin.blockinfile:
