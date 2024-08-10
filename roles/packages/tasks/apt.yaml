@@ -55,8 +55,9 @@
   ansible.builtin.blockinfile:
     path: "{{ item }}"
     marker: "# {mark} ANSIBLE MANAGED BLOCK - exa"
-    state: absent
     create: true
+    mode: '644'
+    state: absent
   loop:
     - $HOME/.bash_aliases
     - $HOME/.oh-my-zsh/custom/alias_exa.zsh
