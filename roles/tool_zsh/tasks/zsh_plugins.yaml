@@ -59,18 +59,18 @@
     regexp: '^(# END ANSIBLE MANAGED BLOCK.*)$(?=\n.)'
     replace: '\1\n'
 
-- name: Install zsh-completion
+- name: Install zsh-autoswitch-virtualenv
   ansible.builtin.git:
-    repo: https://github.com/zsh-users/zsh-completions
-    dest: $HOME/.oh-my-zsh/custom/plugins/zsh-completions
+    repo: https://github.com/MichaelAquilina/zsh-autoswitch-virtualenv.git
+    dest: $HOME/.oh-my-zsh/custom/plugins/autoswitch_virtualenv
     depth: 1
 
-- name: Update .zshrc config for zsh-completion
+- name: Update .zshrc config for zsh-autoswitch-virtualenv
   ansible.builtin.blockinfile:
     path: $HOME/.zshrc
-    marker: "# {mark} ANSIBLE MANAGED BLOCK - zsh-completion"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK - zsh-autoswitch-virtualenv"
     block: |
-      fpath+=${ZSH_CUSTOM:-${ZSH:-$HOME/.oh-my-zsh}/custom}/plugins/zsh-completions/src
+      plugins=($plugins autoswitch_virtualenv)
     insertbefore: '^source \$ZSH\/oh-my-zsh\.sh'
     create: true
     mode: "644"
@@ -88,18 +88,18 @@
     regexp: '^(# END ANSIBLE MANAGED BLOCK.*)$(?=\n.)'
     replace: '\1\n'
 
-- name: Install zsh-autoswitch-virtualenv
+- name: Install zsh-completion
   ansible.builtin.git:
-    repo: https://github.com/MichaelAquilina/zsh-autoswitch-virtualenv.git
-    dest: $HOME/.oh-my-zsh/custom/plugins/autoswitch_virtualenv
+    repo: https://github.com/zsh-users/zsh-completions
+    dest: $HOME/.oh-my-zsh/custom/plugins/zsh-completions
     depth: 1
 
-- name: Update .zshrc config for zsh-autoswitch-virtualenv
+- name: Update .zshrc config for zsh-completion
   ansible.builtin.blockinfile:
     path: $HOME/.zshrc
-    marker: "# {mark} ANSIBLE MANAGED BLOCK - zsh-autoswitch-virtualenv"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK - zsh-completion"
     block: |
-      plugins=($plugins autoswitch_virtualenv)
+      fpath+=${ZSH_CUSTOM:-${ZSH:-$HOME/.oh-my-zsh}/custom}/plugins/zsh-completions/src
     insertbefore: '^source \$ZSH\/oh-my-zsh\.sh'
     create: true
     mode: "644"
