@@ -57,3 +57,4 @@
       ansible.builtin.apt:
         autoremove: true
         purge: true
+        clean: true
