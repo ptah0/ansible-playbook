@@ -19,8 +19,21 @@
       ansible.builtin.command: restic self-update
       register: restic
       changed_when: true
-      failed_when: rclone.rc != 0
+      failed_when: restic.rc != 0
 
     - name: Show Output
       ansible.builtin.debug:
         msg: "{{ restic.stdout_lines }}"
+
+    - name: Update Rclone Autocompletion
+      ansible.builtin.command:
+        cmd: rclone genautocomplete zsh /usr/local/share/zsh/site-functions/_rclone
+      register: rclone_zsh
+      changed_when: true
+      failed_when: rclone.rc != 0
+
+    - name: Update Restic Autocompletion
+      ansible.builtin.command:
+        cmd: sudo restic generate --zsh-completion /usr/local/share/zsh/site-functions/_restic
+      changed_when: true
+      failed_when: restic.rc != 0
