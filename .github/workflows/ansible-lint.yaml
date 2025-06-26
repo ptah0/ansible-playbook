@@ -1,14 +1,30 @@
 ---
 name: ansible-lint
-on:
-  pull_request:
-    branches: ["main", "stable", "release/v*"]
+
+on: [push, pull_request]
+
 jobs:
   build:
     name: Ansible Lint # Naming the build is important to use it as a status check
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
+      - name: Checkout git repo
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+          fetch-depth: 0
+
+      - name: Write ansible collections (required by ansible-lint)
+        run: |
+          cat > requirements.yml <<EOF
+          ---
+          collections:
+            # Install a collection from Ansible Galaxy.
+            - name: community.general
+              version: ">=11"
+              source: https://galaxy.ansible.com
+          EOF
+
       - name: Run ansible-lint
-        uses: ansible/ansible-lint@v6 # or version tag instead of 'main'
+        uses: ansible/ansible-lint@main

@@ -11,7 +11,7 @@
       changed_when: '"rclone is up to date" not in rclone.stderr'
       failed_when: rclone.rc != 0
 
-    - name: Show Output
+    - name: Show Output - rclone
       ansible.builtin.debug:
         msg: "{{ rclone.stdout_lines + rclone.stderr_lines }}"
 
@@ -21,7 +21,7 @@
       changed_when: '"restic is up to date" not in restic.stdout'
       failed_when: restic.rc != 0
 
-    - name: Show Output
+    - name: Show Output - restic
       ansible.builtin.debug:
         msg: "{{ restic.stdout_lines }}"
 
