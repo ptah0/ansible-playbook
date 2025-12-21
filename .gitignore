@@ -1,10 +1,14 @@
-# Created by https://www.toptal.com/developers/gitignore/api/ansible,virtualenv,visualstudiocode
-# Edit at https://www.toptal.com/developers/gitignore?templates=ansible,virtualenv,visualstudiocode
+### Ignore inventories ###
+/inventories/**
+!/inventories/example.yaml
+
+# Created by https://www.toptal.com/developers/gitignore/api/ansible,venv,virtualenv,visualstudiocode
+# Edit at https://www.toptal.com/developers/gitignore?templates=ansible,venv,virtualenv,visualstudiocode
 
 ### Ansible ###
 *.retry
 
-### VirtualEnv ###
+### venv ###
 # Virtualenv
 # http://iamzed.com/2009/05/07/a-primer-on-virtualenv/
 .Python
@@ -17,6 +21,10 @@
 pyvenv.cfg
 .venv
 pip-selfcheck.json
+
+### VirtualEnv ###
+# Virtualenv
+# http://iamzed.com/2009/05/07/a-primer-on-virtualenv/
 
 ### VisualStudioCode ###
 .vscode/*
@@ -37,9 +45,4 @@ pip-selfcheck.json
 .history
 .ionide
 
-# End of https://www.toptal.com/developers/gitignore/api/ansible,virtualenv,visualstudiocode
-
-
-### Ignore inventories ###
-/inventories/**
-!/inventories/example.yaml
+# End of https://www.toptal.com/developers/gitignore/api/ansible,venv,virtualenv,visualstudiocode
