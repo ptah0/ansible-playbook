@@ -3,16 +3,19 @@
   ansible.builtin.command:
     cmd: dpkg --print-architecture
   changed_when: false
-  register: dpkg
+  register: tool_zsh_dpkg
 
 - name: Set Chroma version
   ansible.builtin.set_fact:
-    chroma_version: 2.17.2
-    dpkg_arch: "{{ dpkg.stdout }}"
+    tool_zsh_chroma_version: 2.21.1
+    tool_zsh_dpkg_arch: "{{ tool_zsh_dpkg.stdout }}"
 
 - name: Download Chroma
   ansible.builtin.get_url:
-    url: "https://github.com/alecthomas/chroma/releases/download/v{{ chroma_version }}/chroma-{{ chroma_version }}-linux-{{ dpkg_arch }}.tar.gz"
+    url:
+      "https://github.com/alecthomas/chroma/releases/download\
+      /v{{ tool_zsh_chroma_version }}\
+      /chroma-{{ tool_zsh_chroma_version }}-linux-{{ tool_zsh_dpkg_arch }}.tar.gz"
     dest: /tmp/chroma.tar.gz
     mode: "644"
 

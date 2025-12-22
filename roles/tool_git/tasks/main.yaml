@@ -7,4 +7,4 @@
     scope: global
     name: pull.rebase
     value: "true"
-  register: result
+  register: tool_git_result

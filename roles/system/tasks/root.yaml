@@ -8,7 +8,7 @@
     - .profile
     - .bashrc
     - .bash_logout
-  register: result
+  register: system_result
 
 - name: Setup git
   ansible.builtin.include_role:

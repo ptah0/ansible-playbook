@@ -12,19 +12,19 @@
   ansible.builtin.command:
     cmd: which zsh
   changed_when: false
-  register: zsh
+  register: tool_zsh_zsh
 
 - name: Set var USER, ZSH_BIN
   ansible.builtin.set_fact:
-    shell_user: "{{ ansible_user }}"
-    shell_zsh_bin: "{{ zsh.stdout }}"
+    tool_zsh_shell_user: "{{ ansible_user }}"
+    tool_zsh_shell_zsh_bin: "{{ tool_zsh_zsh.stdout }}"
 
 - name: Change default shell to zsh
   become: true
   become_user: root
   ansible.builtin.user:
-    name: "{{ shell_user }}"
-    shell: "{{ shell_zsh_bin }}"
+    name: "{{ tool_zsh_shell_user }}"
+    shell: "{{ tool_zsh_shell_zsh_bin }}"
 
 - name: Update .zprofile
   ansible.builtin.blockinfile:
@@ -42,10 +42,10 @@
 - name: Get stats of .zshrc
   ansible.builtin.stat:
     path: $HOME/.zshrc
-  register: zshrc
+  register: tool_zsh_zshrc
 
 - name: Set default shell to zsh
-  when: not zshrc.stat.exists
+  when: not tool_zsh_zshrc.stat.exists
   block:
     - name: Download zsh-installer
       ansible.builtin.get_url:

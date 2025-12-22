@@ -3,11 +3,11 @@
   block:
     - name: Set mcfly version
       ansible.builtin.set_fact:
-        mcfly_version: v0.9.3
+        packages_mcfly_version: v0.9.3
     - name: Download mcfly
       ansible.builtin.get_url:
         url: "https://github.com/cantino/mcfly/releases/download/\
-          {{ mcfly_version }}/mcfly-{{ mcfly_version }}-{{ ansible_architecture }}-unknown-linux-musl.tar.gz"
+          {{ packages_mcfly_version }}/mcfly-{{ packages_mcfly_version }}-{{ ansible_architecture }}-unknown-linux-musl.tar.gz"
         dest: /tmp/mcfly.tar.gz
         mode: "644"
     - name: Unzip mcfly

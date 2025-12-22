@@ -2,10 +2,10 @@
 - name: Get stats of .vimrc
   ansible.builtin.stat:
     path: $HOME/.vimrc
-  register: vimrc
+  register: tool_vim_vimrc
 
 - name: Install vimrc via vim_runtime
-  when: not vimrc.stat.exists
+  when: not tool_vim_vimrc.stat.exists
   ansible.builtin.shell:
     cmd: "/usr/local/src/vim_runtime/install_awesome_parameterized.sh /usr/local/src/vim_runtime $USER"
   changed_when: true

@@ -4,16 +4,16 @@
   ansible.builtin.user:
     name: "{{ ansible_user }}"
     state: present
-  register: user
-  failed_when: user.state != "present"
+  register: user_user
+  failed_when: user_user.state != "present"
 
 - name: Check if cloud init (90-cloud-init-users) exists
   ansible.builtin.stat:
     path: /etc/sudoers.d/90-cloud-init-users
-  register: cloudinit
+  register: user_cloudinit
 
 - name: Set sudo no-password for user
-  when: not cloudinit.stat.exists
+  when: not user_cloudinit.stat.exists
   ansible.builtin.lineinfile:
     path: /etc/sudoers.d/10-nopasswd
     regexp: "^{{ ansible_user }}.+NOPASSWD.+"

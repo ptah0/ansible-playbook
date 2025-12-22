@@ -6,3 +6,4 @@
   loop:
     - tldr # man
     - httpie # curl
+  when: false # See https://github.com/pypa/pipx/issues/1669
