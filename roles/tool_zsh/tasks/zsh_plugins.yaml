@@ -5,9 +5,17 @@
   changed_when: false
   register: tool_zsh_dpkg
 
-- name: Set Chroma version
+- name: Fetch latest Chroma version from GitHub API
+  ansible.builtin.uri:
+    url: https://api.github.com/repos/alecthomas/chroma/releases/latest
+    method: GET
+    return_content: true
+    status_code: 200
+  register: tool_zsh_chroma_latest_release
+
+- name: Set Chroma version and architecture
   ansible.builtin.set_fact:
-    tool_zsh_chroma_version: 2.21.1
+    tool_zsh_chroma_version: "{{ tool_zsh_chroma_latest_release.json.tag_name | regex_replace('^v', '') }}"
     tool_zsh_dpkg_arch: "{{ tool_zsh_dpkg.stdout }}"
 
 - name: Download Chroma

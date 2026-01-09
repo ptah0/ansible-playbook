@@ -1,9 +1,17 @@
 ---
 - name: Install mcfly
   block:
+    - name: Fetch latest mcfly version from GitHub API
+      ansible.builtin.uri:
+        url: https://api.github.com/repos/cantino/mcfly/releases/latest
+        method: GET
+        return_content: true
+        status_code: 200
+      register: packages_mcfly_latest_release
+
     - name: Set mcfly version
       ansible.builtin.set_fact:
-        packages_mcfly_version: v0.9.4
+        packages_mcfly_version: "{{ packages_mcfly_latest_release.json.tag_name }}"
     - name: Download mcfly
       ansible.builtin.get_url:
         url: "https://github.com/cantino/mcfly/releases/download/\
