@@ -20,6 +20,13 @@
     - ansible_facts['distribution'] == 'Debian'
     - ansible_facts['distribution_major_version'] | int >= 12
 
+- name: Check Debian 13+
+  ansible.builtin.set_fact:
+    packages_os_is_debian_13: true
+  when:
+    - ansible_facts['distribution'] == 'Debian'
+    - ansible_facts['distribution_major_version'] | int >= 13
+
 - name: Check Ubuntu 24.04+
   ansible.builtin.set_fact:
     packages_os_is_ubuntu_24: true
@@ -41,15 +48,7 @@
   ansible.builtin.apt:
     name:
       - exa # ls
-  when: not packages_os_is_ubuntu_24
-
-- name: Install ls alternative exa (Ubuntu >= 24)
-  become: true
-  become_user: root
-  ansible.builtin.apt:
-    name:
-      - eza # ls
-  when: packages_os_is_ubuntu_24
+  when: not packages_os_is_ubuntu_24 and not packages_os_is_debian_13
 
 - name: Delete Block - Set alias exa
   ansible.builtin.blockinfile:
@@ -75,22 +74,50 @@
   loop:
     - $HOME/.bash_aliases
     - $HOME/.oh-my-zsh/custom/alias_exa.zsh
-  when: not packages_os_is_ubuntu_24
+  when: not packages_os_is_ubuntu_24 and not packages_os_is_debian_13
 
-- name: Set alias for ls alternative - eza
+- name: Install ls alternative exa (Ubuntu >= 24)
+  become: true
+  become_user: root
+  ansible.builtin.apt:
+    name:
+      - eza # ls
+  when: packages_os_is_ubuntu_24 or packages_os_is_debian_13
+
+- name: Delete Block - Set alias eza
   ansible.builtin.blockinfile:
     path: "{{ item }}"
     marker: "# {mark} ANSIBLE MANAGED BLOCK - ls"
-    block: |
-      alias ll='eza -l'
-      alias la='eza -la'
     create: true
     mode: '644'
-    state: present
+    state: absent
   loop:
     - $HOME/.bash_aliases
-    - $HOME/.oh-my-zsh/custom/alias_exa.zsh
-  when: packages_os_is_ubuntu_24
+    - $HOME/.oh-my-zsh/custom/alias_eza.zsh
+
+- name: Set alias for ls alternative - eza
+  when: packages_os_is_ubuntu_24 or packages_os_is_debian_13
+  block:
+    - name: Update .zshrc config for eza
+      ansible.builtin.blockinfile:
+        path: $HOME/.zshrc
+        marker: "# {mark} ANSIBLE MANAGED BLOCK - eza"
+        block: |
+          plugins=($plugins eza)
+        insertbefore: '^source \$ZSH\/oh-my-zsh\.sh'
+        create: true
+        mode: "644"
+        state: present
+    - name: Insert an empty line before the marker line
+      ansible.builtin.replace:
+        path: $HOME/.zshrc
+        regexp: '(?<=.\n)^(# BEGIN ANSIBLE MANAGED BLOCK.*)$'
+        replace: '\n\1'
+    - name: Insert an empty line after the marker line
+      ansible.builtin.replace:
+        path: $HOME/.zshrc
+        regexp: '^(# END ANSIBLE MANAGED BLOCK.*)$(?=\n.)'
+        replace: '\1\n'
 
 - name: Set alias for fd-find
   ansible.builtin.blockinfile:
