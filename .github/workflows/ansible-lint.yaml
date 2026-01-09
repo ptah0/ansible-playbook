@@ -10,7 +10,7 @@ jobs:
 
     steps:
       - name: Checkout git repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           submodules: true
           fetch-depth: 0
@@ -22,8 +22,6 @@ jobs:
           collections:
             # Install a collection from Ansible Galaxy.
             - name: community.general
-              version: ">=11"
-              source: https://galaxy.ansible.com
           EOF
 
       - name: Run ansible-lint
