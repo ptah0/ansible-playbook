@@ -3,7 +3,7 @@
   block:
     - name: Set mcfly version
       ansible.builtin.set_fact:
-        packages_mcfly_version: v0.9.3
+        packages_mcfly_version: v0.9.4
     - name: Download mcfly
       ansible.builtin.get_url:
         url: "https://github.com/cantino/mcfly/releases/download/\
