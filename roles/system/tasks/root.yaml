@@ -1,6 +1,7 @@
 ---
 - name: Copy skeleton for root user
   ansible.builtin.copy:
+    remote_src: true
     src: "/etc/skel/{{ item }}"
     dest: "/root/{{ item }}"
     mode: '600'
